@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import { getDynamoDBClient } from '../utils/dynamodb.js';
+import redis, { invalidateCache } from '../utils/redis.js';
 
 // Model to create a new blog
 const saveBlog = async (id, username, title, content, avatar_url) => {
@@ -26,6 +27,9 @@ const saveBlog = async (id, username, title, content, avatar_url) => {
             }
         };
 
+        // Invalidate cache while creating the blog
+        await invalidateCache(id);
+
         await dynamoDBClient.batchWrite(params).promise();
 
     } catch (error) {
@@ -37,11 +41,25 @@ const saveBlog = async (id, username, title, content, avatar_url) => {
 const getAllItems = async () => {
     try {
 
+        //Check if there is a cached response in Redis
+        let cached_response = await redis.get('getAllItems', (err, getAllItems) => {
+            if (getAllItems) {
+                return JSON.parse(getAllItems);
+            }
+        }).catch(err => console.log(err));
+
+        if (cached_response) {
+            return JSON.parse(cached_response);
+        }
+
+        //If no cached response found, fetch from DynamoDB
         const dynamoDBClient = getDynamoDBClient();
         const params = {
             TableName: process.env.DYNAMODB_BLOG_TABLE
         }
         const response = await dynamoDBClient.scan(params).promise();
+
+        redis.set('getAllItems', JSON.stringify(response.Items));
 
         return response.Items;
     } catch (error) {
@@ -56,6 +74,18 @@ const getAllItemsByUser = async (user_id) => {
             return [];
         }
 
+        //Check if there is a cached response in Redis
+        let cached_response = await redis.get(`getAllItemsByUser${user_id}`, (err, items) => {
+            if (items) {
+                return JSON.parse(items);
+            }
+        }).catch(err => console.log(err));
+
+        if (cached_response) {
+            return JSON.parse(cached_response);
+        }
+
+        //If no cached response found, fetch from DynamoDB
         const dynamoDBClient = getDynamoDBClient();
         const params = {
             TableName: process.env.DYNAMODB_BLOG_TABLE,
@@ -66,6 +96,7 @@ const getAllItemsByUser = async (user_id) => {
         }
 
         const response = await dynamoDBClient.scan(params).promise();
+        redis.set(`getAllItemsByUser${user_id}`, JSON.stringify(response.Items));
 
         return response.Items;
     } catch (error) {
@@ -85,6 +116,9 @@ const deleteItemById = async (blog_id, user_id) => {
                 user_id: user_id
             }
         }
+
+        //Invalidate cache before deleting the blog
+        await invalidateCache(user_id);
 
         await dynamoDBClient.delete(params).promise();
     } catch (error) {
@@ -109,6 +143,9 @@ const updateItem = async (title, content, blog_id, user_id) => {
                 ':updated_at': new Date().toISOString()
             }
         }
+
+        // Invalidate cache before updating the blog
+        await invalidateCache(user_id);
 
         await dynamoDBClient.update(params).promise();
 
