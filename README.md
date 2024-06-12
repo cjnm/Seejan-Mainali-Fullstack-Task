@@ -1,4 +1,4 @@
-# simpleblog
+# simple-blog
 
 ## Introduction
 
@@ -23,8 +23,10 @@ The features of the APi are:
 
 - NodeJS (latest LTS version)
 - DynamoDB Local
+###### OR
+- Docker
 
-### Install
+### Local Install
 
 - Install dependency for frontend and backend
 
@@ -69,7 +71,7 @@ yarn start
 yarn start
 ```
 
-### Docker
+### Using Docker
 
 ##### API
 To run the API in docker set the `JWT_SECRET`, `GITHUB_CLIENT_SECRET`, `GITHUB_CLIENT_ID` and other environment variables in `docker-compose.yml` file and run the command `docker compose up --build` inside the `api` folder.
@@ -82,7 +84,7 @@ To run the frontedn in docker set the `REACT_APP_API_URL` environment variable i
 ### Endpoints
 
 There are five endpoints available for fetching, updating and deleting blogs and two for internal github authentication.
-The `Postman Collection` is available from the link <https://www.getpostman.com/collections/0be1493ed18bb4391324> or from the file `simpleblog API Endpoints.postman_collection.json` available in this repo.
+The `Postman Collection` is available in the file `simple-blog_endpoint.postman_collection.json` available in this repo.
 
 ### Status Codes
 

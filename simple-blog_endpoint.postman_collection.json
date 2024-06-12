@@ -1,0 +1,179 @@
+{
+	"info": {
+		"_postman_id": "5aa1b3a8-7d38-403c-ba4e-510750e08cc8",
+		"name": "simple-blog_endpoint",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "6610039"
+	},
+	"item": [
+		{
+			"name": "Get the list of Blogs",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{backendurl}}/blog",
+					"host": [
+						"{{backendurl}}"
+					],
+					"path": [
+						"blog"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all blogs for current user",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{jwt}}"
+					},
+					{
+						"key": "X-User-Id",
+						"value": "{{user_id}}"
+					},
+					{
+						"key": "X-User-Username",
+						"value": "{{username}}"
+					}
+				],
+				"url": {
+					"raw": "{{backendurl}}/blog/user/{{user_id}}",
+					"host": [
+						"{{backendurl}}"
+					],
+					"path": [
+						"blog",
+						"user",
+						"{{user_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create a new blog post",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{jwt}}"
+					},
+					{
+						"key": "X-User-Id",
+						"value": "{{user_id}}"
+					},
+					{
+						"key": "X-User-Username",
+						"value": "{{username}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"Blog title\",\n    \"content\": \"blog content\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{backendurl}}/blog/new",
+					"host": [
+						"{{backendurl}}"
+					],
+					"path": [
+						"blog",
+						"new"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update a blog post",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{jwt}}"
+					},
+					{
+						"key": "X-User-Id",
+						"value": "{{user_id}}"
+					},
+					{
+						"key": "X-User-Username",
+						"value": "{{username}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"Blog title apply\",\n    \"content\": \"blog content\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{backendurl}}/blog/{{blog_id}}",
+					"host": [
+						"{{backendurl}}"
+					],
+					"path": [
+						"blog",
+						"{{blog_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete a blog post",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{jwt}}"
+					},
+					{
+						"key": "X-User-Id",
+						"value": "{{user_id}}"
+					},
+					{
+						"key": "X-User-Username",
+						"value": "{{username}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"Blog title\",\n    \"content\": \"blog content\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{backendurl}}/blog/{{blog_id}}",
+					"host": [
+						"{{backendurl}}"
+					],
+					"path": [
+						"blog",
+						"{{blog_id}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
