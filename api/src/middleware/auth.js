@@ -1,8 +1,5 @@
-import jwt from 'jsonwebtoken';
 import { getUserInfo } from '../model/Users.js';
-
-// Load the JWT secret from environment variables
-const { JWT_SECRET } = process.env;
+import { isTokenExpired, decodeToken } from '../utils/jwt.js';
 
 // Middleware function for JWT authentication
 const auth = async (req, res, next) => {
@@ -21,15 +18,15 @@ const auth = async (req, res, next) => {
     const token = jwt_token.split(' ')[1];
 
     try {
-        // Verify the token using the secret and user-specific key
-        const decoded = jwt.verify(token, JWT_SECRET);
+        // Verify the token using the secret key
+        const decoded = decodeToken(token);
 
         // Check if the token has expired
-        if (isTokenExpired(decoded.exp)) {
+        if (isTokenExpired(decoded.exp) || !decoded) {
             return res.status(401).json({
                 success: false,
                 status: 401,
-                message: "Token expired"
+                message: "Token expired or unusable"
             });
         }
 
@@ -59,15 +56,5 @@ const auth = async (req, res, next) => {
     // Proceed to the next middleware function or route handler
     return next();
 };
-
-// Function to check if the token is expired
-const isTokenExpired = (expiry) => {
-    if (!expiry) {
-        return true; // If there is no expiry time, consider the token expired
-    }
-
-    // Compare the current time (in seconds) with the expiry time
-    return (Math.floor((new Date).getTime() / 1000)) >= expiry;
-}
 
 export { auth };
