@@ -40,6 +40,7 @@ services:
       AWS_ENDPOINT: http://dynamodb:8000
       DYNAMODB_USER_TABLE: Users
       DYNAMODB_BLOG_TABLE: Blog
+      DYNAMODB_CHAT_TABLE: Chats
       JWT_SECRET: 4o?hacev&RLcr=HlSOtruH8raDODRLwroPrU9TeDrOtr*Ni-Lducr_cejAStes&a
     depends_on:
       - redis

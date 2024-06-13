@@ -15,6 +15,7 @@ export default function NavBar({ user, handleLogin, handleLogout }) {
                 <li><Link to="/">Blogs</Link></li>
                 <li><Link to="/create">New Blog</Link></li>
                 <li><Link to={"/blogs/user/" + user.id}>My Blogs</Link></li>
+                <li><Link to="/chat">Groupchat</Link></li>
                 <li><NextLink onClick={handleLogout}>Logout</NextLink></li>
             </ul>
         );
