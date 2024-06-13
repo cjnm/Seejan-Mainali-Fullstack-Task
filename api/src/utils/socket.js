@@ -1,6 +1,7 @@
 import { Server } from "socket.io";
 import { decodeToken } from "./jwt.js";
 import { getUserInfo } from "../model/Users.js";
+import { saveMessage } from "../model/Chat.js";
 
 const initSocket = (server, config) => {
     try {
@@ -53,9 +54,9 @@ const initSocket = (server, config) => {
                     return;
                 }
 
-                const { avatar_url, username } = user[0];
+                const { avatar_url, username, id: user_id } = user[0];
 
-                console.log({ message, username, avatar_url })
+                saveMessage(user_id, username, message, avatar_url);
                 socket.in('main_thread').emit('message_received', { message, username, avatar_url });
             })
         });

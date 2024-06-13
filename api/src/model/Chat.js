@@ -1,9 +1,8 @@
 import { v4 as uuidv4 } from 'uuid';
 import { getDynamoDBClient } from '../utils/dynamodb.js';
-import redis, { invalidateCache } from '../utils/redis.js';
 
 // Model to save a new message
-const saveMessage = async (id, username, message, avatar_url) => {
+const saveMessage = async (user_id, username, message, avatar_url) => {
     try {
         const dynamoDBClient = getDynamoDBClient();
         const params = {
@@ -13,9 +12,9 @@ const saveMessage = async (id, username, message, avatar_url) => {
                         PutRequest: {
                             Item: {
                                 id: uuidv4(),
-                                user_id: id,
+                                user_id: user_id,
                                 username: username,
-                                title: title,
+                                message: message,
                                 created_at: new Date().toISOString(),
                                 updated_at: new Date().toISOString(),
                                 avatar_url: avatar_url || '',
@@ -38,11 +37,21 @@ const getAllMessages = async () => {
     try {
         const dynamoDBClient = getDynamoDBClient();
         const params = {
-            TableName: process.env.DYNAMODB_CHAT_TABLE
-        }
-        const response = await dynamoDBClient.scan(params).promise();
+            TableName: process.env.DYNAMODB_CHAT_TABLE,
+            IndexName: 'CreatedAtIndex',
+            ScanIndexForward: true // true for ascending order
+        };
 
-        return response.Items;
+        let items = [];
+        let data;
+
+        do {
+            data = await dynamoDBClient.scan(params).promise();
+            items = items.concat(data.Items);
+            params.ExclusiveStartKey = data.LastEvaluatedKey;
+        } while (typeof data.LastEvaluatedKey !== 'undefined');
+
+        return items;
     } catch (error) {
         console.log(error);
     }

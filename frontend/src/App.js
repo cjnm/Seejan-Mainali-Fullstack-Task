@@ -51,10 +51,10 @@ function App() {
     <>
       <Spacer />
       <Grid.Container justify="center">
-        <Grid xs={1}>
+        <Grid xs={2}>
           <NavBar user={user} handleLogout={handleLogout} handleLogin={handleLogin} />
         </Grid>
-        <Grid xs={11}>
+        <Grid xs={10}>
           <BlogContent user={user} navigate={navigate} />
         </Grid>
       </Grid.Container>

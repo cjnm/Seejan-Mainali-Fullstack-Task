@@ -39,6 +39,8 @@ const createUserTable = async () => {
     } catch (error) {
         if (error.message === 'Cannot create preexisting table') {
             console.log('Table already created.');
+        } else {
+            console.log(error.message)
         }
     }
 }
@@ -78,6 +80,8 @@ const createBlogTable = async () => {
     } catch (error) {
         if (error.message === 'Cannot create preexisting table') {
             console.log('Table already created.');
+        } else {
+            console.log(error.message)
         }
     }
 }
@@ -93,7 +97,7 @@ const createChatsTable = async () => {
                     KeyType: 'HASH'
                 },
                 {
-                    AttributeName: 'user_id',
+                    AttributeName: 'created_at',
                     KeyType: 'RANGE'
                 }
             ],
@@ -103,29 +107,53 @@ const createChatsTable = async () => {
                     AttributeType: 'S'
                 },
                 {
-                    AttributeName: 'user_id',
-                    AttributeType: 'N'
+                    AttributeName: 'created_at',
+                    AttributeType: 'S'
                 }
             ],
             ProvisionedThroughput: {
                 ReadCapacityUnits: 1,
                 WriteCapacityUnits: 1
-            }
+            },
+            GlobalSecondaryIndexes: [
+                {
+                    IndexName: 'CreatedAtIndex',
+                    KeySchema: [
+                        {
+                            AttributeName: 'created_at',
+                            KeyType: 'HASH'
+                        },
+                        {
+                            AttributeName: 'id',
+                            KeyType: 'RANGE'
+                        }
+                    ],
+                    Projection: {
+                        ProjectionType: 'ALL'
+                    },
+                    ProvisionedThroughput: {
+                        ReadCapacityUnits: 1,
+                        WriteCapacityUnits: 1
+                    }
+                }
+            ]
         };
 
         await dynamoDBClient.createTable(params).promise();
     } catch (error) {
         if (error.message === 'Cannot create preexisting table') {
             console.log('Table already created.');
+        } else {
+            console.log(error.message)
         }
     }
 }
 
 
 const migrate = async () => {
-    await createUserTable().catch(err => console.log(err));
-    await createBlogTable().catch(err => console.log(err));
-    await createChatsTable().catch(err => console.log(err));
+    await createUserTable();
+    await createBlogTable();
+    await createChatsTable();
 }
 
 migrate();
