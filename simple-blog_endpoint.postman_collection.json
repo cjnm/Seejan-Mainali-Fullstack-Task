@@ -31,14 +31,6 @@
 					{
 						"key": "Authorization",
 						"value": "{{jwt}}"
-					},
-					{
-						"key": "X-User-Id",
-						"value": "{{user_id}}"
-					},
-					{
-						"key": "X-User-Username",
-						"value": "{{username}}"
 					}
 				],
 				"url": {
@@ -63,14 +55,6 @@
 					{
 						"key": "Authorization",
 						"value": "{{jwt}}"
-					},
-					{
-						"key": "X-User-Id",
-						"value": "{{user_id}}"
-					},
-					{
-						"key": "X-User-Username",
-						"value": "{{username}}"
 					}
 				],
 				"body": {
@@ -103,14 +87,6 @@
 					{
 						"key": "Authorization",
 						"value": "{{jwt}}"
-					},
-					{
-						"key": "X-User-Id",
-						"value": "{{user_id}}"
-					},
-					{
-						"key": "X-User-Username",
-						"value": "{{username}}"
 					}
 				],
 				"body": {
@@ -143,14 +119,6 @@
 					{
 						"key": "Authorization",
 						"value": "{{jwt}}"
-					},
-					{
-						"key": "X-User-Id",
-						"value": "{{user_id}}"
-					},
-					{
-						"key": "X-User-Username",
-						"value": "{{username}}"
 					}
 				],
 				"body": {
