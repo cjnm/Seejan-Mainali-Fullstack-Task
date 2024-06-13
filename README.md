@@ -2,12 +2,13 @@
 
 ## Introduction
 
-Simpleblog is a ExpressJS React app which uses DynamoDB as storage and Redis for caching.
+Simpleblog is a ExpressJS React app which uses DynamoDB as storage and Redis for caching. Public groupchat featurehas been added with realtime messaging for loggedin users.
 
 The features of the APi are:
 
 - Logged in user can create, update, delete and read blogs
 - Public user can read blog and can signup with github
+- Logged in user can send realtime public group messages
 
 ##### Other Features
 
