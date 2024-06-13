@@ -44,10 +44,9 @@ authRouter.get('/github/callback', async (req, res) => {
         );
         const token = jwt.sign(
             { username: username, id: id },
-            `${process.env.JWT_SECRET}-${id}`,
+            process.env.JWT_SECRET,
             { expiresIn: '12h' }
         );
-
 
         res.redirect(`${process.env.FRONTEND_URI}/login?jwt=Bearer ${token}&username=${username}&id=${id}&avatar_url=${avatar_url}`);
     } catch (error) {

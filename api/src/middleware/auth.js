@@ -1,18 +1,15 @@
 import jwt from 'jsonwebtoken';
+import { getUserInfo } from '../model/Users.js';
 
 // Load the JWT secret from environment variables
 const { JWT_SECRET } = process.env;
 
 // Middleware function for JWT authentication
-const auth = (req, res, next) => {
-    // Extract user information and JWT token from headers
-    const id = req.headers['x-user-id'];
-    const username = req.headers['x-user-username'];
-    const avatar_url = req.headers['x-user-avatar'];
+const auth = async (req, res, next) => {
     const jwt_token = req.headers['authorization'];
 
     // Check if required headers are present
-    if (!jwt_token || !id || !username) {
+    if (!jwt_token) {
         return res.status(401).json({
             success: false,
             status: 401,
@@ -25,7 +22,7 @@ const auth = (req, res, next) => {
 
     try {
         // Verify the token using the secret and user-specific key
-        const decoded = jwt.verify(token, `${JWT_SECRET}-${id}`);
+        const decoded = jwt.verify(token, JWT_SECRET);
 
         // Check if the token has expired
         if (isTokenExpired(decoded.exp)) {
@@ -36,15 +33,26 @@ const auth = (req, res, next) => {
             });
         }
 
+        // get user from database and compare it with decoded user details
+        const user = await getUserInfo(decoded.username);
+
+        if(!Array.isArray(user) || !user.length || decoded.username !== user[0].username) {
+            return res.status(401).json({
+                success: false,
+                status: 401,
+                message: "Auth failed. User not found"
+            });
+        }
+
         // Attach decoded information to the request object
-        req.username = decoded.username;
-        req.id = decoded.id;
-        req.avatar_url = avatar_url;
+        req.username = user[0].username;
+        req.id = user[0].id;
+        req.avatar_url = user[0].avatar_url;
     } catch (err) {
         return res.status(401).json({
             success: false,
             status: 401,
-            message: "Authorization Error"
+            message: "Authorization Error" + err.message
         });
     }
 

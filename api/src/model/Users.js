@@ -22,4 +22,24 @@ const saveUserInfo = async (user) => {
     }
 }
 
-export { saveUserInfo }
+const getUserInfo = async (username) => {
+    try {
+        const dynamoDBClient = getDynamoDBClient();
+        const params = {
+            TableName: process.env.DYNAMODB_USER_TABLE,
+            FilterExpression: 'username = :username',
+            ExpressionAttributeValues: {
+                ':username': username
+            }
+        }
+
+        const response = await dynamoDBClient.scan(params).promise();
+
+        return response.Items;
+    } catch (error) {
+        console.log(error);
+        return false;
+    }
+}
+
+export { saveUserInfo, getUserInfo }

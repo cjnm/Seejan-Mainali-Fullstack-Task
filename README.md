@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Simpleblog is a ExpressJS React app which uses DynamoDB as storage and Redis for cahing.
+Simpleblog is a ExpressJS React app which uses DynamoDB as storage and Redis for caching.
 
 The features of the APi are:
 
@@ -12,7 +12,6 @@ The features of the APi are:
 ##### Other Features
 
 - Github Auth
-- Runs on multithreaded CPU with node cluster module
 - Uses local dynamoDB
 - Runs on docker
 - API caching with redis. Invalidates when any data updates else remains persistant.
@@ -125,15 +124,10 @@ Github Auth has been used for user signup and user creation and JWT Auth has bee
 ```
 {
     Authorization: JWT_token,
-    'X-User-Id': github_user_id,
-    'X-User-Username': github_user_name,
-    'X-User-Avatar': github_avatar_url
 }
 ```
 
 ###### JWT token and user details can be found on browser local storage for loggedin user using `localStorage.getItem('simpleblog-user')` comand on browser console.
-
-###### The `X-User-Avatar` header is optional.
 
 ## Blog Endpoints
 
